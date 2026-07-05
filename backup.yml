@@ -1,0 +1,16 @@
+---
+- name: Respaldo de configuracion CSR1000v
+  hosts: routers
+  gather_facts: no
+
+  tasks:
+    - name: Ejecutar comando show running-config en el router
+      ios_command:
+        commands:
+          - show running-config
+      register: salida_config
+
+    - name: Guardar el respaldo en un archivo local en DEVASC
+      copy:
+        content: "{{ salida_config.stdout[0] }}"
+        dest: "./respaldo_csr1000v.cfg"

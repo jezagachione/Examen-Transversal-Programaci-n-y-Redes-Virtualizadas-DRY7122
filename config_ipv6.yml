@@ -1,0 +1,22 @@
+---
+- name: Configuracion de IPv6 en Loopback 44 - CSR1000v
+  hosts: routers
+  gather_facts: no
+
+  tasks:
+    - name: Habilitar enrutamiento IPv6 unicast general
+      ios_config:
+        lines:
+          - ipv6 unicast-routing
+
+    - name: Crear Loopback 44 y asignar direccionamiento IPv6 Global y Link-Local
+      ios_config:
+        parents: interface Loopback44
+        lines:
+          - ipv6 address 3001:ABCD:ABCD:4::4/128
+          - ipv6 address FE80::1 link-local
+          - no shutdown
+
+    - name: Guardar la configuracion en el router
+      ios_config:
+        save_when: modified
